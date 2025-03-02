@@ -18,21 +18,24 @@ import java.util.List;
 @RequestMapping("/users")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserController {
+
     @Autowired
     UserService userService;
 
     @PostMapping
     ApiResponse<User> createUser(@RequestBody @Valid UserCreationRequest request){
+
         ApiResponse<User> apiResponse = new ApiResponse<>();
-        apiResponse.setCode(1000);
         apiResponse.setResult(userService.createUser(request));
 
         return  apiResponse;
     }
 
     @GetMapping
-    List<User> getUser() {
-        return userService.getUsers();
+    ApiResponse<List<UserResponse>> getUsers() {
+        return ApiResponse.<List<UserResponse>>builder()
+                .result(userService.getUsers())
+                .build();
     }
 
     @GetMapping("/{userId}")
